@@ -1,0 +1,183 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://web.archive.org/web/2025/https://www.allianz.com.au/"
+      ],
+      "description": "Allianz Australia homepage with hero, insurance product cards, promotional content, and trust signals",
+      "blocks": [
+        {
+          "name": "hero-homepage",
+          "instances": [
+            ".a1stage"
+          ]
+        },
+        {
+          "name": "columns-feature",
+          "instances": [
+            ".multi-column-grid"
+          ]
+        },
+        {
+          "name": "columns-awards",
+          "instances": [
+            ".wrapper:has(.c-heading--section):has(.c-image)"
+          ]
+        },
+        {
+          "name": "columns-partner",
+          "instances": [
+            ".wrapper:has(img[alt*='Olympic'])"
+          ]
+        },
+        {
+          "name": "cards-product",
+          "instances": [
+            ".wrapper:has(.theme--inverted) .multi-column-grid",
+            ".wrapper:has(.theme--negative) .multi-column-grid"
+          ]
+        },
+        {
+          "name": "cards-article",
+          "instances": [
+            ".wrapper:has(a[href*='insights']) .multi-column-grid"
+          ]
+        },
+        {
+          "name": "cards-support",
+          "instances": [
+            ".wrapper:has(a[href*='support']) .multi-column-grid"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "section-1-alert-banner",
+          "name": "Alert Banner",
+          "selector": ".l-container[style*='FDD25C']",
+          "style": "alert-yellow",
+          "blocks": [],
+          "defaultContent": [
+            ".l-container[style*='FDD25C'] .c-copy"
+          ]
+        },
+        {
+          "id": "section-2-hero",
+          "name": "Hero",
+          "selector": ".a1stage",
+          "style": null,
+          "blocks": [
+            "hero-homepage"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-3-why-choose",
+          "name": "Why Choose Allianz",
+          "selector": ".wrapper:has(h2:contains('Why choose'))",
+          "style": null,
+          "blocks": [
+            "columns-feature"
+          ],
+          "defaultContent": [
+            ".wrapper:has(h2:contains('Why choose')) h2"
+          ]
+        },
+        {
+          "id": "section-4-awards",
+          "name": "Award-Winning Insurer",
+          "selector": ".wrapper:has(h2:contains('Award-winning'))",
+          "style": null,
+          "blocks": [
+            "columns-awards"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-5-olympic-partner",
+          "name": "Olympic Partner Banner",
+          "selector": ".wrapper:has(img[alt*='Olympic'])",
+          "style": null,
+          "blocks": [
+            "columns-partner"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "section-6-insurance-products",
+          "name": "Insurance with Allianz",
+          "selector": ".wrapper:has(.theme--inverted)",
+          "style": "dark",
+          "blocks": [
+            "cards-product"
+          ],
+          "defaultContent": [
+            ".wrapper:has(.theme--inverted) h2",
+            ".wrapper:has(.theme--inverted) .c-heading--subsection-xsmall"
+          ]
+        },
+        {
+          "id": "section-7-claims-cta",
+          "name": "Claims CTA",
+          "selector": ".wrapper:has(h2:contains('claim'))",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".wrapper:has(h2:contains('claim')) h2",
+            ".wrapper:has(h2:contains('claim')) .c-copy",
+            ".wrapper:has(h2:contains('claim')) .c-link"
+          ]
+        },
+        {
+          "id": "section-8-insights",
+          "name": "Insights / Help Articles",
+          "selector": ".wrapper:has(h2:contains('help you'))",
+          "style": null,
+          "blocks": [
+            "cards-article"
+          ],
+          "defaultContent": [
+            ".wrapper:has(h2:contains('help you')) h2",
+            ".wrapper:has(h2:contains('help you')) > .c-copy"
+          ]
+        },
+        {
+          "id": "section-9-support",
+          "name": "Support Section",
+          "selector": ".wrapper:has(h2:contains('support'))",
+          "style": null,
+          "blocks": [
+            "cards-support"
+          ],
+          "defaultContent": [
+            ".wrapper:has(h2:contains('support')) h2",
+            ".wrapper:has(h2:contains('support')) > .c-copy"
+          ]
+        },
+        {
+          "id": "section-10-social",
+          "name": "Social Follow",
+          "selector": ".social-bar",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".social-bar h2",
+            ".social-bar ul"
+          ]
+        },
+        {
+          "id": "section-11-conditions",
+          "name": "Conditions / Disclaimers",
+          "selector": ".wrapper:has(h3:contains('Conditions'))",
+          "style": null,
+          "blocks": [],
+          "defaultContent": [
+            ".wrapper:has(h3:contains('Conditions')) h3",
+            ".wrapper:has(h3:contains('Conditions')) ol"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-article",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-18T13:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.allianz.com.au/",
+    "originPage": "Allianz Australia homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "article-cards",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "3 cards: image + linked heading + description + read-more CTA",
+    "buttonCount": 3,
+    "imageCount": 3
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "blog article teasers",
+      "insight and help article cards",
+      "content hub article grids"
+    ],
+    "notSuitableFor": [
+      "product feature cards on dark backgrounds",
+      "support resource cards with photos",
+      "cards without images"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-18T13:50:00.000Z"
+  }
+}

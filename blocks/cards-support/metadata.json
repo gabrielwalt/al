@@ -1,0 +1,39 @@
+{
+  "variantName": "cards-support",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-03-18T13:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.allianz.com.au/",
+    "originPage": "Allianz Australia homepage",
+    "blockPosition": "bottom"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "support-cards",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "2 cards: photo + heading + description + CTA each",
+    "buttonCount": 2,
+    "imageCount": 2
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "support and help resource cards",
+      "service cards with people photos",
+      "2-card layouts for support topics"
+    ],
+    "notSuitableFor": [
+      "product feature cards on dark backgrounds",
+      "article/blog teasers with 3+ cards",
+      "icon-based feature cards"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-18T13:50:00.000Z"
+  }
+}

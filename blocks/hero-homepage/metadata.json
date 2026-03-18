@@ -1,0 +1,39 @@
+{
+  "variantName": "hero-homepage",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-03-18T13:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.allianz.com.au/",
+    "originPage": "Allianz Australia homepage",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "homepage-hero",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "background-image + heading + subtitle + 2 CTAs",
+    "buttonCount": 2,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "homepage hero sections",
+      "landing pages with background images",
+      "full-width banner sections with CTAs"
+    ],
+    "notSuitableFor": [
+      "text-only hero sections",
+      "hero sections without background images",
+      "minimal hero banners"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-18T13:50:00.000Z"
+  }
+}

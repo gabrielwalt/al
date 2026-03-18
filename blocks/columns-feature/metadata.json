@@ -1,0 +1,39 @@
+{
+  "variantName": "columns-feature",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-03-18T13:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.allianz.com.au/",
+    "originPage": "Allianz Australia homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "trust-signals",
+    "imagePattern": "icon"
+  },
+  "contentPattern": {
+    "structure": "3 columns: icon + heading + description each",
+    "buttonCount": 0,
+    "imageCount": 3
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "feature highlight sections with icons",
+      "trust signal grids",
+      "benefit lists with illustrations"
+    ],
+    "notSuitableFor": [
+      "text-heavy 2-column layouts",
+      "image gallery layouts",
+      "award badge displays"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-18T13:50:00.000Z"
+  }
+}

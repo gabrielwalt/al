@@ -1,0 +1,39 @@
+{
+  "variantName": "columns-partner",
+  "baseBlock": "columns",
+  "version": "1.0.0",
+  "created": "2026-03-18T13:50:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.allianz.com.au/",
+    "originPage": "Allianz Australia homepage",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "partner-banner",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "2 columns: partner logo left, description text right",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "partner and sponsor banners",
+      "logo + description layouts",
+      "brand partnership sections"
+    ],
+    "notSuitableFor": [
+      "multi-column feature grids",
+      "award badge displays",
+      "text-heavy comparison layouts"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/content/index"],
+    "reuseCount": 1,
+    "lastUsed": "2026-03-18T13:50:00.000Z"
+  }
+}
