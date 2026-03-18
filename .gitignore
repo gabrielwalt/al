@@ -1,11 +1,26 @@
-.hlx/*
-coverage/*
-logs/*
-node_modules/*
-
-helix-importer-ui
+# OS / IDE / Editor
 .DS_Store
-*.bak
 .idea
+*.bak
+
+# Dependencies / Build
+node_modules/
+coverage/
+logs/
+.hlx/
 localhost.pem
 localhost-key.pem
+
+# Generated
+helix-importer-ui
+.migration/project.json
+tools/importer/*.bundle.js
+tools/importer/urls-*.txt
+tools/importer/reports/
+*.html
+
+# Force-track (override above)
+!CLAUDE.md
+!INSTRUCTIONS.md
+!PROJECT.md
+!PAGES.txt
