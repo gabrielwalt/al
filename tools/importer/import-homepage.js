@@ -44,12 +44,8 @@ const PAGE_TEMPLATE = {
       instances: ['.a1stage'],
     },
     {
-      name: 'columns-feature',
-      instances: ['.multi-column-grid'],
-    },
-    {
       name: 'columns-awards',
-      instances: [".wrapper:has(.c-heading--section):has(.c-image)"],
+      instances: [".wrapper:has(a[href*='awards'])"],
     },
     {
       name: 'columns-partner',
@@ -66,6 +62,10 @@ const PAGE_TEMPLATE = {
     {
       name: 'cards-support',
       instances: [".wrapper:has(a[href*='support']) .multi-column-grid"],
+    },
+    {
+      name: 'columns-feature',
+      instances: ['.multi-column-grid'],
     },
   ],
   sections: [
@@ -183,17 +183,21 @@ function executeTransformers(hookName, element, payload) {
  */
 function findBlocksOnPage(document, template) {
   const pageBlocks = [];
+  const matchedElements = new Set();
 
   template.blocks.forEach((blockDef) => {
     blockDef.instances.forEach((selector) => {
       try {
         const elements = document.querySelectorAll(selector);
         elements.forEach((element) => {
-          pageBlocks.push({
-            name: blockDef.name,
-            selector,
-            element,
-          });
+          if (!matchedElements.has(element)) {
+            matchedElements.add(element);
+            pageBlocks.push({
+              name: blockDef.name,
+              selector,
+              element,
+            });
+          }
         });
       } catch (e) {
         console.warn(`Block "${blockDef.name}" selector failed: ${selector}`, e);
@@ -223,6 +227,20 @@ export default {
       if (parser) {
         try {
           parser(block.element, { document, url, params });
+          // Debug: check hero block table rows after parse
+          if (block.name === 'hero-homepage') {
+            const heroTable = document.querySelector('table');
+            if (heroTable) {
+              const rows = heroTable.querySelectorAll('tr');
+              console.log(`[DEBUG] Hero table rows: ${rows.length}`);
+              rows.forEach((r, i) => {
+                const cells = r.querySelectorAll('td, th');
+                cells.forEach((c) => {
+                  console.log(`[DEBUG]   Row ${i}: ${c.innerHTML.substring(0, 120)}`);
+                });
+              });
+            }
+          }
         } catch (e) {
           console.error(`Failed to parse ${block.name} (${block.selector}):`, e);
         }

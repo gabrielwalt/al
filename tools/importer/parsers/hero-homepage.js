@@ -49,18 +49,21 @@ export default function parse(element, { document }) {
     const img = document.createElement('img');
     img.src = bgImg.src;
     img.alt = bgImg.alt || '';
-    cells.push([img]);
+    const imgFrag = document.createDocumentFragment();
+    imgFrag.appendChild(document.createComment(' field:image '));
+    imgFrag.appendChild(img);
+    cells.push([imgFrag]);
   }
 
   // Row 2: Content (heading + subheading + CTAs)
   const contentCell = [];
 
-  // Heading
+  // Heading — use h2 in block table (h1 breaks markdown table conversion)
   const heading = q('h1, h2');
   if (heading) {
-    const h1 = document.createElement('h1');
-    h1.textContent = heading.textContent.trim();
-    contentCell.push(h1);
+    const h2 = document.createElement('h2');
+    h2.textContent = heading.textContent.trim();
+    contentCell.push(h2);
   }
 
   // Subheading — span.heading--h3 or similar
@@ -110,9 +113,19 @@ export default function parse(element, { document }) {
     });
   }
 
+  console.log(`[HERO DEBUG] contentCell length: ${contentCell.length}`);
+  contentCell.forEach((el, i) => {
+    console.log(`[HERO DEBUG]   [${i}] tag=${el.tagName} text="${(el.textContent || '').substring(0, 40)}"`);
+  });
+
   if (contentCell.length > 0) {
-    cells.push([contentCell]);
+    const textFrag = document.createDocumentFragment();
+    textFrag.appendChild(document.createComment(' field:text '));
+    contentCell.forEach((el) => textFrag.appendChild(el));
+    cells.push([textFrag]);
   }
+
+  console.log(`[HERO DEBUG] cells length: ${cells.length}`);
 
   const block = WebImporter.Blocks.createBlock(document, { name: 'hero-homepage', cells });
   element.replaceWith(block);

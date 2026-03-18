@@ -62,7 +62,22 @@ export default function parse(element, { document }) {
       textContent.push(p);
     }
 
-    cells.push([imgCell, textContent]);
+    // XWalk field hints
+    let imgHinted = imgCell;
+    if (imgCell && imgCell !== '') {
+      const imgFrag = document.createDocumentFragment();
+      imgFrag.appendChild(document.createComment(' field:image '));
+      imgFrag.appendChild(imgCell);
+      imgHinted = imgFrag;
+    }
+    let textHinted = textContent;
+    if (textContent.length > 0) {
+      const textFrag = document.createDocumentFragment();
+      textFrag.appendChild(document.createComment(' field:text '));
+      textContent.forEach((el) => textFrag.appendChild(el));
+      textHinted = textFrag;
+    }
+    cells.push([imgHinted, textHinted]);
   });
 
   const block = WebImporter.Blocks.createBlock(document, { name: 'cards-product', cells });

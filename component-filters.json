@@ -11,12 +11,19 @@
       "accordion",
       "button",
       "cards",
+      "cards-article",
+      "cards-product",
+      "cards-support",
       "carousel",
       "columns",
+      "columns-awards",
+      "columns-feature",
+      "columns-partner",
       "embed",
       "fragment",
       "form",
       "hero",
+      "hero-homepage",
       "image",
       "quote",
       "search",
@@ -34,6 +41,24 @@
     ]
   },
   {
+    "id": "cards-article",
+    "components": [
+      "card-article"
+    ]
+  },
+  {
+    "id": "cards-product",
+    "components": [
+      "card-product"
+    ]
+  },
+  {
+    "id": "cards-support",
+    "components": [
+      "card-support"
+    ]
+  },
+  {
     "id": "cards",
     "components": [
       "card"
@@ -43,6 +68,51 @@
     "id": "carousel",
     "components": [
       "carousel-item"
+    ]
+  },
+  {
+    "id": "columns-awards",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "column",
+    "components": [
+      "text",
+      "image",
+      "button",
+      "title"
+    ]
+  },
+  {
+    "id": "columns-feature",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "column",
+    "components": [
+      "text",
+      "image",
+      "button",
+      "title"
+    ]
+  },
+  {
+    "id": "columns-partner",
+    "components": [
+      "column"
+    ]
+  },
+  {
+    "id": "column",
+    "components": [
+      "text",
+      "image",
+      "button",
+      "title"
     ]
   },
   {

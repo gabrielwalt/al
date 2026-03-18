@@ -1,4 +1,5 @@
-export default function decorate() {
-  // hero-homepage: no additional decoration needed
-  // The hero block renders with background image, heading, and CTAs via CSS
+// eslint-disable-next-line no-unused-vars
+export default function decorate(block) {
+  // Hero homepage: CSS-only decoration (background image + text overlay)
+  // No DOM manipulation needed — markup structure from UE is used as-is
 }

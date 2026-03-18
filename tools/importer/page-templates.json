@@ -14,15 +14,9 @@
           ]
         },
         {
-          "name": "columns-feature",
-          "instances": [
-            ".multi-column-grid"
-          ]
-        },
-        {
           "name": "columns-awards",
           "instances": [
-            ".wrapper:has(.c-heading--section):has(.c-image)"
+            ".wrapper:has(a[href*='awards'])"
           ]
         },
         {
@@ -48,6 +42,12 @@
           "name": "cards-support",
           "instances": [
             ".wrapper:has(a[href*='support']) .multi-column-grid"
+          ]
+        },
+        {
+          "name": "columns-feature",
+          "instances": [
+            ".multi-column-grid"
           ]
         }
       ],

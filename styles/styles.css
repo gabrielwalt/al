@@ -264,3 +264,21 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+main .section.dark {
+  background-color: var(--dark-color);
+  color: var(--background-color);
+  margin: 0;
+  padding: 40px 0;
+}
+
+main .section.dark a:any-link {
+  color: var(--background-color);
+}
+
+main .section.alert-yellow {
+  background-color: #fdb900;
+  color: var(--text-color);
+  margin: 0;
+  padding: 16px 0;
+}
