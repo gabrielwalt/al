@@ -7,27 +7,26 @@
  * Source: https://www.allianz.com.au/
  * Source selector: .wrapper:has(a[href*='insights']) .multi-column-grid
  *
- * Cards block library structure (2 columns per row):
- *   Row 1: block name (handled by createBlock)
- *   Row 2+: [image] | [heading + description + CTA]
- *
- * Source DOM structure:
+ * Live site DOM ("Let us help you" section, 3 article cards):
  *   .multi-column-grid > div > .l-grid__row > .column (x3)
- *   Each .column contains:
- *     div.cmp-image > picture > img
- *     div.headline > h3 > a (linked title)
+ *   Each .column:
+ *     div.cmp.cmp-image > picture > img (photo, 652x325 JPEG)
+ *     div.headline > h3 > a (linked article title)
  *     div.text > p (description)
- *     div.link > a (Read article CTA)
+ *     div.link > a (CTA: "Read article")
+ *
+ * Cards block structure (2 columns per row):
+ *   Row 1: block name (handled by createBlock)
+ *   Row 2+: [photo image] | [h3 linked title + description + CTA]
  */
 export default function parse(element, { document }) {
-  // Select only top-level column containers (not their inner child divs)
-  const columns = element.querySelectorAll('.l-grid__row > .column');
+  const columns = element.querySelectorAll('.column');
   if (columns.length === 0) return;
 
   const cells = [];
   columns.forEach((col) => {
-    // Cell 1: Image
-    const img = col.querySelector('img');
+    // Cell 1: Photo image
+    const img = col.querySelector('.cmp-image img, .cmp img, img');
     let imgCell;
     if (img) {
       const newImg = document.createElement('img');
@@ -41,8 +40,8 @@ export default function parse(element, { document }) {
     // Cell 2: Text content
     const textContent = [];
 
-    // Heading — linked (h3 > a) for articles
-    const headingLink = col.querySelector('h3 a, h2 a');
+    // Linked heading (h3 > a)
+    const headingLink = col.querySelector('.headline h3 a, h3 a');
     const heading = col.querySelector('h3, h2');
     if (headingLink) {
       const h3 = document.createElement('h3');
@@ -57,27 +56,27 @@ export default function parse(element, { document }) {
       textContent.push(h3);
     }
 
-    // Description paragraph
-    const desc = col.querySelector('.text p, .text .c-copy, p');
-    if (desc) {
+    // Description
+    const descEl = col.querySelector('.text p, .text .c-copy');
+    if (descEl) {
       const p = document.createElement('p');
-      p.textContent = desc.textContent.trim();
+      p.textContent = descEl.textContent.trim();
       textContent.push(p);
     }
 
-    // CTA link — from .link container
-    const cta = col.querySelector('div.link a');
+    // CTA link (from .link container, not from heading links)
+    const cta = col.querySelector('div.link a, .link > a');
     if (cta) {
       const a = document.createElement('a');
       a.href = cta.href || '#';
-      a.textContent = (cta.querySelector('.c-link__text') || cta).textContent.trim();
+      const ctaText = cta.querySelector('.c-link__text');
+      a.textContent = (ctaText || cta).textContent.trim();
       const p = document.createElement('p');
       p.append(a);
       textContent.push(p);
     }
 
-    // Only add row if we have meaningful content
-    if (textContent.length > 0 || imgCell) {
+    if (textContent.length > 0 || (imgCell && imgCell !== '')) {
       // XWalk field hints
       let imgHinted = imgCell;
       if (imgCell && imgCell !== '') {

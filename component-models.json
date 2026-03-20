@@ -142,8 +142,8 @@
             "value": "dark"
           },
           {
-            "name": "Alert Yellow",
-            "value": "alert-yellow"
+            "name": "Light Teal",
+            "value": "light-teal"
           }
         ]
       }
@@ -511,6 +511,10 @@
         ]
       }
     ]
+  },
+  {
+    "id": "social-follow",
+    "fields": []
   },
   {
     "id": "table",

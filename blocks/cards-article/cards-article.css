@@ -1,27 +1,68 @@
+/* cards-article block — article teaser cards with photo */
 .cards-article > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
 }
 
 .cards-article > ul > li {
-  border: 1px solid #dadada;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
   background-color: var(--background-color);
-}
-
-.cards-article .cards-article-card-body {
-  margin: 16px;
+  overflow: hidden;
 }
 
 .cards-article .cards-article-card-image {
   line-height: 0;
 }
 
-.cards-article > ul > li img {
+.cards-article .cards-article-card-image img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 2 / 1;
   object-fit: cover;
+  display: block;
+}
+
+.cards-article .cards-article-card-body {
+  padding: 20px 24px;
+}
+
+.cards-article .cards-article-card-body h3 {
+  font-size: var(--heading-font-size-s);
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.cards-article .cards-article-card-body h3 a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.cards-article .cards-article-card-body h3 a:hover {
+  text-decoration: underline;
+}
+
+.cards-article .cards-article-card-body p {
+  font-size: var(--body-font-size-s);
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.cards-article .cards-article-card-body p:last-child a {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cards-article .cards-article-card-body p:last-child a:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .cards-article > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

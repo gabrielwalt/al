@@ -5,60 +5,64 @@
  * Parser: columns-awards
  * Base block: columns
  * Source: https://www.allianz.com.au/
- * Source selector: .wrapper:has(.c-heading--section):has(.c-image)
+ * Source selector: .wrapper:has(a[href*='awards']) .multi-column-grid
  *
- * Columns block library structure (multi-column, multi-row):
+ * Live site DOM ("An award-winning insurer" section):
+ *   .multi-column-grid (2-col grid, 6-6):
+ *     LEFT column: h2 heading + p text + a link ("See all our awards")
+ *     RIGHT column: picture > img (awards badge, 652x135 PNG)
+ *
+ * Columns block structure:
  *   Row 1: block name (handled by createBlock)
- *   Row 2+: N cells per row
- *
- * Source DOM (2-column: text + awards):
- *   wrapper containing:
- *     h2 "Award-winning insurer"
- *     .multi-column-grid with 2 columns:
- *       Column 1: .c-copy text + a.c-link "See our awards"
- *       Column 2: nested .multi-column-grid with 2 award badge images
+ *   Row 2: [heading + text + CTA] | [awards image]
  */
 export default function parse(element, { document }) {
-  // Column 1: heading + text + CTA
-  const col1Content = [];
+  var columns = element.querySelectorAll('.column');
+  if (columns.length < 2) return;
 
-  const heading = element.querySelector('h2, .c-heading--section');
+  // Column 1: heading + text + CTA link
+  var col1 = columns[0];
+  var col1Content = [];
+
+  var heading = col1.querySelector('h2');
   if (heading) {
-    const h2 = document.createElement('h2');
-    h2.textContent = heading.textContent.trim();
+    var h2 = document.createElement('h2');
+    // Preserve innerHTML to keep <em> highlights from cleanup transformer
+    h2.innerHTML = heading.innerHTML;
     col1Content.push(h2);
   }
 
-  const bodyText = element.querySelector('.c-copy, .text .c-copy');
+  var bodyText = col1.querySelector('.text .c-copy, .text p, .c-copy');
   if (bodyText) {
-    const p = document.createElement('p');
+    var p = document.createElement('p');
     p.textContent = bodyText.textContent.trim();
     col1Content.push(p);
   }
 
-  const ctaLink = element.querySelector('a.c-link, .link a');
+  var ctaLink = col1.querySelector('.link a, a.c-link');
   if (ctaLink) {
-    const a = document.createElement('a');
+    var a = document.createElement('a');
     a.href = ctaLink.href || '#';
-    a.textContent = ctaLink.textContent.trim();
-    const p = document.createElement('p');
-    p.append(a);
-    col1Content.push(p);
+    var linkText = ctaLink.querySelector('.c-link__text');
+    a.textContent = (linkText || ctaLink).textContent.trim();
+    var ctaP = document.createElement('p');
+    ctaP.append(a);
+    col1Content.push(ctaP);
   }
 
-  // Column 2: award badge images
-  const col2Content = [];
-  const images = element.querySelectorAll('img[alt]');
-  images.forEach((img) => {
-    if (img.alt && img.alt.trim()) {
-      const newImg = document.createElement('img');
-      newImg.src = img.src;
-      newImg.alt = img.alt;
-      col2Content.push(newImg);
-    }
-  });
+  // Column 2: awards badge image
+  var col2 = columns[1];
+  var col2Content = [];
 
-  const cells = [[col1Content, col2Content]];
-  const block = WebImporter.Blocks.createBlock(document, { name: 'columns-awards', cells });
+  var img = col2.querySelector('img');
+  if (img) {
+    var newImg = document.createElement('img');
+    newImg.src = img.src;
+    newImg.alt = img.alt || '';
+    col2Content.push(newImg);
+  }
+
+  var cells = [[col1Content, col2Content]];
+  var block = WebImporter.Blocks.createBlock(document, { name: 'columns-awards', cells: cells });
   element.replaceWith(block);
 }

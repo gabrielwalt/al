@@ -7,105 +7,110 @@
  * Source: https://www.allianz.com.au/
  * Source selector: .a1stage
  *
- * Hero block library structure (1 column, 3 rows):
- *   Row 1: block name (handled by createBlock)
+ * The hero uses <one-stage> web component with shadow DOM.
+ * Shadow DOM is lost during html2md serialization (outerHTML).
+ * The import script's pre-extraction IIFE injects:
+ *   data-extracted-headings: JSON array of {level, text}
+ *   data-extracted-buttons: JSON array of {text, href, variant}
+ * on the <one-stage> element before serialization.
+ *
+ * Hero block structure (1 column, 2 data rows):
+ *   Row 1 (header): block name (handled by createBlock)
  *   Row 2: background image
  *   Row 3: heading + subheading + CTAs
- *
- * Source DOM: <one-stage> web component with Shadow DOM containing:
- *   img.stage__image (background)
- *   one-heading > h1 "Allianz Insurance"
- *   one-heading > span "Care you can count on"
- *   one-button > button "Get your quote"
- *   one-button > a "Renew now"
  */
 export default function parse(element, { document }) {
   const cells = [];
-
-  // Access <one-stage> shadow DOM for rendered content
   const oneStage = element.querySelector('one-stage');
-  const shadow = oneStage ? oneStage.shadowRoot : null;
 
-  // Helper: query in shadow root first, fall back to element
-  const q = (sel) => (shadow && shadow.querySelector(sel)) || element.querySelector(sel);
-  const qAll = (sel) => {
-    const fromShadow = shadow ? Array.from(shadow.querySelectorAll(sel)) : [];
-    return fromShadow.length > 0 ? fromShadow : Array.from(element.querySelectorAll(sel));
-  };
+  // === Row 1: Background image ===
+  // Available via data-image attribute (survives serialization)
+  let imgSrc = null;
+  let imgAlt = '';
 
-  // Row 1: Background image
-  let bgImg = q('img.stage__image, img:not(.stage__image-mobile)');
-  if (!bgImg && oneStage) {
-    // Fallback to data attribute
-    const imgSrc = oneStage.getAttribute('data-image');
-    const imgAlt = oneStage.getAttribute('data-stageimagealt') || '';
-    if (imgSrc) {
-      bgImg = document.createElement('img');
-      bgImg.src = imgSrc.startsWith('http') ? imgSrc : `https://www.allianz.com.au${imgSrc}`;
-      bgImg.alt = imgAlt;
+  if (oneStage) {
+    const dataImg = oneStage.getAttribute('data-image');
+    imgAlt = oneStage.getAttribute('data-stageimagealt') || '';
+    if (dataImg) {
+      imgSrc = dataImg.startsWith('http') ? dataImg : `https://www.allianz.com.au${dataImg}`;
     }
   }
-  if (bgImg) {
+
+  if (imgSrc) {
     const img = document.createElement('img');
-    img.src = bgImg.src;
-    img.alt = bgImg.alt || '';
+    img.src = imgSrc;
+    img.alt = imgAlt;
     const imgFrag = document.createDocumentFragment();
     imgFrag.appendChild(document.createComment(' field:image '));
     imgFrag.appendChild(img);
     cells.push([imgFrag]);
   }
 
-  // Row 2: Content (heading + subheading + CTAs)
+  // === Row 2: Text content (heading + subheading + CTAs) ===
   const contentCell = [];
 
-  // Heading — use h2 in block table (h1 breaks markdown table conversion)
-  const heading = q('h1, h2');
-  if (heading) {
+  // Primary source: pre-extracted data attributes (injected by IIFE before serialization)
+  let headingsData = [];
+  let buttonsData = [];
+
+  if (oneStage) {
+    try {
+      const rawHeadings = oneStage.getAttribute('data-extracted-headings');
+      if (rawHeadings) headingsData = JSON.parse(rawHeadings);
+    } catch (e) { /* ignore parse errors */ }
+
+    try {
+      const rawButtons = oneStage.getAttribute('data-extracted-buttons');
+      if (rawButtons) buttonsData = JSON.parse(rawButtons);
+    } catch (e) { /* ignore parse errors */ }
+  }
+
+  // Heading (h1 level -> output as h2 for EDS)
+  const h1Entry = headingsData.find((h) => h.level === 'h1');
+  if (h1Entry && h1Entry.text) {
     const h2 = document.createElement('h2');
-    h2.textContent = heading.textContent.trim();
+    h2.textContent = h1Entry.text;
     contentCell.push(h2);
   }
 
-  // Subheading — span.heading--h3 or similar
-  const subheading = q('span.heading--h3, span.heading, one-heading[data-level="span"]');
-  if (subheading) {
+  // Subheading (span level)
+  const spanEntry = headingsData.find((h) => h.level === 'span');
+  if (spanEntry && spanEntry.text) {
     const p = document.createElement('p');
-    p.textContent = subheading.textContent.trim();
+    p.textContent = spanEntry.text;
     contentCell.push(p);
   }
 
-  // CTAs — collect buttons and links from shadow DOM
-  const ctaElements = qAll('one-button');
-  ctaElements.forEach((oneBtn) => {
-    const btnShadow = oneBtn.shadowRoot;
-    const anchor = btnShadow
-      ? btnShadow.querySelector('a') || btnShadow.querySelector('button')
-      : oneBtn.querySelector('a, button');
-    if (!anchor) return;
-
-    const linkText = (anchor.textContent || '').trim()
-      || oneBtn.getAttribute('data-text') || '';
-    if (!linkText) return;
+  // CTA buttons
+  buttonsData.forEach((btn) => {
+    if (!btn.text) return;
 
     const a = document.createElement('a');
-    const href = oneBtn.getAttribute('data-href')
-      || (anchor.tagName === 'A' ? anchor.getAttribute('href') : '')
-      || '#';
-    a.href = href.startsWith('/') ? `https://www.allianz.com.au${href}` : href;
-    a.textContent = linkText;
+    // Modal trigger buttons (no href or #) get a placeholder anchor
+    if (!btn.href || btn.href === '#') {
+      a.href = '#quote';
+    } else {
+      a.href = btn.href.startsWith('/') ? 'https://www.allianz.com.au' + btn.href : btn.href;
+    }
+    a.textContent = btn.text;
     const p = document.createElement('p');
     p.append(a);
     contentCell.push(p);
   });
 
-  // Fallback: if no one-button found, try direct a/button elements
-  if (ctaElements.length === 0) {
-    const links = qAll('a[href], button[data-href]');
-    links.forEach((link) => {
+  // Fallback: if pre-extraction did not work, try direct DOM queries
+  if (contentCell.length === 0) {
+    const h = element.querySelector('h1, h2');
+    if (h) {
+      const h2 = document.createElement('h2');
+      h2.textContent = h.textContent.trim();
+      contentCell.push(h2);
+    }
+    element.querySelectorAll('a[href]').forEach((link) => {
       const text = link.textContent.trim();
       if (!text) return;
       const a = document.createElement('a');
-      a.href = link.href || link.getAttribute('data-href') || '#';
+      a.href = link.href;
       a.textContent = text;
       const p = document.createElement('p');
       p.append(a);
@@ -113,19 +118,12 @@ export default function parse(element, { document }) {
     });
   }
 
-  console.log(`[HERO DEBUG] contentCell length: ${contentCell.length}`);
-  contentCell.forEach((el, i) => {
-    console.log(`[HERO DEBUG]   [${i}] tag=${el.tagName} text="${(el.textContent || '').substring(0, 40)}"`);
-  });
-
   if (contentCell.length > 0) {
     const textFrag = document.createDocumentFragment();
     textFrag.appendChild(document.createComment(' field:text '));
     contentCell.forEach((el) => textFrag.appendChild(el));
     cells.push([textFrag]);
   }
-
-  console.log(`[HERO DEBUG] cells length: ${cells.length}`);
 
   const block = WebImporter.Blocks.createBlock(document, { name: 'hero-homepage', cells });
   element.replaceWith(block);

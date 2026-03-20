@@ -5,19 +5,21 @@
  * Parser: columns-feature
  * Base block: columns
  * Source: https://www.allianz.com.au/
- * Source selector: .multi-column-grid (first instance, section 3 "Why Choose Allianz")
+ * Source selector: .wrapper:has(.c-heading--subsection-medium) .multi-column-grid
  *
- * Columns block library structure (multi-column, multi-row):
+ * Live site DOM ("What care looks like" section, 4 icon columns):
+ *   .multi-column-grid > div > .l-grid__row > .column (x4)
+ *   Each .column (l-grid__column-large-3):
+ *     div.cmp.cmp-image > picture > img (icon SVG)
+ *     div.headline > span.c-heading.c-heading--subsection-medium (text)
+ *       Some headings contain <sup> footnote refs or inline <a> links
+ *
+ * Columns block structure:
  *   Row 1: block name (handled by createBlock)
- *   Row 2+: N cells per row, each cell can contain text, images, links
- *
- * Source DOM (3-column trust signals):
- *   .multi-column-grid > div > .l-grid__row > .column (×3)
- *   Each .column: picture > img (SVG illustration), h3 heading, .c-copy text
+ *   Row 2: N cells (one per column), each with icon + text
  */
 export default function parse(element, { document }) {
-  // Find all columns
-  const columns = element.querySelectorAll('.column, .l-grid__column-large-4');
+  const columns = element.querySelectorAll('.column');
   if (columns.length === 0) return;
 
   // Build one row with N cells (one per column)
@@ -25,8 +27,8 @@ export default function parse(element, { document }) {
   columns.forEach((col) => {
     const cellContent = [];
 
-    // Image
-    const img = col.querySelector('img');
+    // Icon image
+    const img = col.querySelector('.cmp-image img, .cmp img, img');
     if (img) {
       const newImg = document.createElement('img');
       newImg.src = img.src;
@@ -34,35 +36,53 @@ export default function parse(element, { document }) {
       cellContent.push(newImg);
     }
 
-    // Heading (h3)
-    const heading = col.querySelector('h3, h2');
-    if (heading) {
-      const h3 = document.createElement('h3');
-      h3.textContent = heading.textContent.trim();
-      cellContent.push(h3);
-    }
-
-    // Body text
-    const text = col.querySelector('.c-copy, .text .c-copy');
-    if (text) {
+    // Heading text (span.c-heading--subsection-medium, NOT h2/h3)
+    const headingSpan = col.querySelector('.c-heading--subsection-medium, .c-heading');
+    if (headingSpan) {
       const p = document.createElement('p');
-      p.textContent = text.textContent.trim();
+      // Preserve inline links within the heading text
+      const inlineLink = headingSpan.querySelector('a');
+      if (inlineLink) {
+        // Clone the text content, preserving the link
+        const textBefore = headingSpan.firstChild;
+        if (textBefore && textBefore.nodeType === 3) {
+          p.append(textBefore.textContent);
+        }
+        const a = document.createElement('a');
+        a.href = inlineLink.href || '#';
+        a.textContent = inlineLink.textContent.trim();
+        p.append(a);
+        // Get remaining text after the link
+        let afterLink = inlineLink.nextSibling;
+        while (afterLink) {
+          if (afterLink.nodeType === 3) {
+            p.append(afterLink.textContent);
+          }
+          afterLink = afterLink.nextSibling;
+        }
+      } else {
+        // Plain text (strip <sup> footnote references)
+        p.textContent = headingSpan.textContent.trim();
+      }
       cellContent.push(p);
     }
 
-    // CTA link (if any)
-    const link = col.querySelector('a.c-link, .link a');
-    if (link) {
-      const a = document.createElement('a');
-      a.href = link.href || '#';
-      a.textContent = link.textContent.trim();
-      const p = document.createElement('p');
-      p.append(a);
-      cellContent.push(p);
+    // Fallback: check for h3/h2 if span not found
+    if (!headingSpan) {
+      const heading = col.querySelector('h3, h2');
+      if (heading) {
+        const h3 = document.createElement('h3');
+        h3.textContent = heading.textContent.trim();
+        cellContent.push(h3);
+      }
     }
 
-    row.push(cellContent);
+    if (cellContent.length > 0) {
+      row.push(cellContent);
+    }
   });
+
+  if (row.length === 0) return;
 
   const cells = [row];
   const block = WebImporter.Blocks.createBlock(document, { name: 'columns-feature', cells });

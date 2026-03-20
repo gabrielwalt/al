@@ -1,18 +1,20 @@
-export default function decorate(block) {
-  const cols = [...block.firstElementChild.children];
-  block.classList.add(`columns-feature-${cols.length}-cols`);
+import { moveInstrumentation } from '../../scripts/scripts.js';
 
-  // setup image columns
-  [...block.children].forEach((row) => {
-    [...row.children].forEach((col) => {
-      const pic = col.querySelector('picture');
-      if (pic) {
-        const picWrapper = pic.closest('div');
-        if (picWrapper && picWrapper.children.length === 1) {
-          // picture is only content in column
-          picWrapper.classList.add('columns-feature-img-col');
-        }
-      }
-    });
+export default function decorate(block) {
+  const row = block.firstElementChild;
+  if (!row) return;
+
+  const grid = document.createElement('div');
+  grid.className = 'columns-feature-grid';
+  moveInstrumentation(row, grid);
+
+  [...row.children].forEach((col) => {
+    const cell = document.createElement('div');
+    cell.className = 'columns-feature-cell';
+    while (col.firstChild) cell.append(col.firstChild);
+    grid.append(cell);
   });
+
+  block.textContent = '';
+  block.append(grid);
 }

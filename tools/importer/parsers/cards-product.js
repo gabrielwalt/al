@@ -5,25 +5,28 @@
  * Parser: cards-product
  * Base block: cards
  * Source: https://www.allianz.com.au/
- * Source selector: .wrapper:has(.theme--inverted) .multi-column-grid,
- *                  .wrapper:has(.theme--negative) .multi-column-grid
+ * Source selector: .wrapper:has(.buttons-group) .multi-column-grid
  *
- * Cards block library structure (2 columns per row):
+ * Live site DOM (3 product columns in "Insurance with Allianz" section):
+ *   .multi-column-grid > div > .l-grid__row > .column (x3)
+ *   Each .column:
+ *     div.cmp.cmp-image > picture > img (icon SVG)
+ *     div.link-list > h3 > a (linked product title)
+ *     div.link-list > ul.c-link-list__list > li > a (sub-product links)
+ *     div.button > a.c-button (CTA: "Start a quote" / "Select your state")
+ *
+ * Cards block structure (2 columns per row):
  *   Row 1: block name (handled by createBlock)
- *   Row 2+: [image] | [heading + description + CTA]
- *
- * Source DOM (3 product cards in dark section):
- *   .multi-column-grid > div > .l-grid__row > .column (×3)
- *   Each .column: img (product photo), h3 heading, .c-copy text, a.c-link CTA
+ *   Row 2+: [icon image] | [h3 title + sub-links list + CTA]
  */
 export default function parse(element, { document }) {
-  const columns = element.querySelectorAll(':scope .column, :scope .l-grid__column-large-4');
+  const columns = element.querySelectorAll('.column');
   if (columns.length === 0) return;
 
   const cells = [];
   columns.forEach((col) => {
-    // Cell 1: Image
-    const img = col.querySelector('img');
+    // Cell 1: Icon image
+    const img = col.querySelector('.cmp-image img, .cmp img, img');
     let imgCell;
     if (img) {
       const newImg = document.createElement('img');
@@ -34,29 +37,52 @@ export default function parse(element, { document }) {
       imgCell = '';
     }
 
-    // Cell 2: Text content (heading + description + CTA)
+    // Cell 2: Text content
     const textContent = [];
 
-    const heading = col.querySelector('h3, h2');
-    if (heading) {
+    // Product title (h3 with link)
+    const titleLink = col.querySelector('.link-list h3 a, .c-link-list h3 a, h3 a');
+    const titleH3 = col.querySelector('h3');
+    if (titleLink) {
       const h3 = document.createElement('h3');
-      h3.textContent = heading.textContent.trim();
+      const a = document.createElement('a');
+      a.href = titleLink.href || '#';
+      a.textContent = titleLink.textContent.trim();
+      h3.append(a);
+      textContent.push(h3);
+    } else if (titleH3) {
+      const h3 = document.createElement('h3');
+      h3.textContent = titleH3.textContent.trim();
       textContent.push(h3);
     }
 
-    const body = col.querySelector('.c-copy, .text .c-copy');
-    if (body) {
-      const p = document.createElement('p');
-      p.textContent = body.textContent.trim();
-      textContent.push(p);
+    // Sub-product links (e.g., Home & Contents, Renters, Landlord)
+    const subLinks = col.querySelectorAll('.c-link-list__list a, .c-link-list__link-row a');
+    if (subLinks.length > 0) {
+      const ul = document.createElement('ul');
+      subLinks.forEach((link) => {
+        const text = link.textContent.trim();
+        if (!text) return;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = link.href || '#';
+        a.textContent = text;
+        li.append(a);
+        ul.append(li);
+      });
+      if (ul.children.length > 0) {
+        textContent.push(ul);
+      }
     }
 
-    // CTA link — specifically from .link container, not from inline footnotes in .c-copy
-    const cta = col.querySelector('div.link a, a.c-link--block');
-    if (cta) {
+    // CTA button
+    const ctaBtn = col.querySelector('.button a.c-button, a.c-button--link, .button a');
+    if (ctaBtn) {
       const a = document.createElement('a');
-      a.href = cta.href || '#';
-      a.textContent = (cta.querySelector('.c-link__text') || cta).textContent.trim();
+      a.href = ctaBtn.href || '#';
+      // Get text from the button, stripping icon spans
+      const btnText = ctaBtn.querySelector('.c-button__text');
+      a.textContent = (btnText || ctaBtn).textContent.trim();
       const p = document.createElement('p');
       p.append(a);
       textContent.push(p);
@@ -77,8 +103,13 @@ export default function parse(element, { document }) {
       textContent.forEach((el) => textFrag.appendChild(el));
       textHinted = textFrag;
     }
-    cells.push([imgHinted, textHinted]);
+
+    if (textContent.length > 0 || (imgCell && imgCell !== '')) {
+      cells.push([imgHinted, textHinted]);
+    }
   });
+
+  if (cells.length === 0) return;
 
   const block = WebImporter.Blocks.createBlock(document, { name: 'cards-product', cells });
   element.replaceWith(block);

@@ -1,33 +1,40 @@
-.columns-feature > div {
-  display: flex;
-  flex-direction: column;
+/* columns-feature block — 4-column icon grid with text */
+.columns-feature-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
 }
 
-.columns-feature img {
-  width: 100%;
+.columns-feature-cell {
+  text-align: center;
 }
 
-.columns-feature > div > div {
-  order: 1;
+.columns-feature-cell img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 12px;
 }
 
-.columns-feature > div > .columns-feature-img-col {
-  order: 0;
+.columns-feature-cell p {
+  font-size: var(--body-font-size-s);
+  color: var(--color-text);
+  line-height: 1.5;
 }
 
-.columns-feature > div > .columns-feature-img-col img {
-  display: block;
+.columns-feature-cell a {
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 @media (width >= 900px) {
-  .columns-feature > div {
-    align-items: center;
-    flex-direction: unset;
-    gap: 24px;
+  .columns-feature-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
   }
 
-  .columns-feature > div > div {
-    flex: 1;
-    order: unset;
+  .columns-feature-cell img {
+    width: 72px;
+    height: 72px;
   }
 }

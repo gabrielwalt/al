@@ -33,6 +33,14 @@
             {
               "name": "Highlight",
               "value": "highlight"
+            },
+            {
+              "name": "Dark",
+              "value": "dark"
+            },
+            {
+              "name": "Light Teal",
+              "value": "light-teal"
             }
           ]
         }
@@ -46,15 +54,22 @@
         "accordion",
         "button",
         "cards",
+        "cards-article",
+        "cards-product",
+        "cards-support",
         "carousel",
         "columns",
+        "columns-awards",
+        "columns-feature",
         "embed",
         "fragment",
         "form",
         "hero",
+        "hero-homepage",
         "image",
         "quote",
         "search",
+        "social-follow",
         "tabs",
         "table",
         "text",

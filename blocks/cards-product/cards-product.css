@@ -1,27 +1,99 @@
+/* cards-product block */
 .cards-product > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
 }
 
 .cards-product > ul > li {
-  border: 1px solid #dadada;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
   background-color: var(--background-color);
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.cards-product .cards-product-card-icon {
+  flex: 0 0 80px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 0 24px 24px;
+}
+
+.cards-product .cards-product-card-icon img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
 }
 
 .cards-product .cards-product-card-body {
-  margin: 16px;
+  flex: 1;
+  padding: 20px 24px;
 }
 
-.cards-product .cards-product-card-image {
-  line-height: 0;
+.cards-product .cards-product-card-body h3 {
+  margin-top: 0;
+  font-size: var(--heading-font-size-m);
 }
 
-.cards-product > ul > li img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+.cards-product .cards-product-card-body h3 a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.cards-product .cards-product-card-body h3 a:hover {
+  text-decoration: underline;
+}
+
+.cards-product .cards-product-card-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.cards-product .cards-product-card-body ul li {
+  padding: 4px 0;
+  border: none;
+}
+
+.cards-product .cards-product-card-body ul li a {
+  color: var(--color-secondary);
+  font-size: var(--body-font-size-s);
+}
+
+.cards-product .cards-product-card-body p:last-child a {
+  display: inline-block;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: var(--body-font-size-xs);
+  text-decoration: none;
+  margin-top: 8px;
+}
+
+.cards-product .cards-product-card-body p:last-child a:hover {
+  background-color: var(--color-primary-hover);
+}
+
+@media (width >= 900px) {
+  .cards-product > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cards-product > ul > li {
+    flex-direction: column;
+  }
+
+  .cards-product .cards-product-card-icon {
+    flex: unset;
+    padding: 24px 24px 0;
+    justify-content: flex-start;
+  }
 }

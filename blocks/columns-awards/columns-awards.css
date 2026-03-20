@@ -1,33 +1,43 @@
+/* columns-awards block — 2-col text + badge image */
 .columns-awards > div {
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
-.columns-awards img {
-  width: 100%;
+.columns-awards .columns-awards-text-col h2 {
+  margin-top: 0;
 }
 
-.columns-awards > div > div {
-  order: 1;
+.columns-awards .columns-awards-text-col p {
+  font-size: var(--body-font-size-m);
+  color: var(--color-text-secondary);
 }
 
-.columns-awards > div > .columns-awards-img-col {
-  order: 0;
+.columns-awards .columns-awards-text-col a:not(.button) {
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
-.columns-awards > div > .columns-awards-img-col img {
-  display: block;
+.columns-awards .columns-awards-img-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.columns-awards .columns-awards-img-col img {
+  max-width: 100%;
+  height: auto;
 }
 
 @media (width >= 900px) {
   .columns-awards > div {
+    flex-direction: row;
     align-items: center;
-    flex-direction: unset;
-    gap: 24px;
+    gap: 48px;
   }
 
   .columns-awards > div > div {
     flex: 1;
-    order: unset;
   }
 }
